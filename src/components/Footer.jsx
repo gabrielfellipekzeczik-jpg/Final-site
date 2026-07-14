@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Heart, Lock } from 'lucide-react';
+import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Heart, Lock, MessageCircle } from 'lucide-react';
 import Butterfly from './Butterfly';
 
 export default function Footer({ settings }) {
@@ -7,6 +7,7 @@ export default function Footer({ settings }) {
     { url: settings?.instagram_url, Icon: Instagram },
     { url: settings?.facebook_url, Icon: Facebook },
     { url: settings?.youtube_url, Icon: Youtube },
+    { url: settings?.whatsapp_url, Icon: MessageCircle },
   ].filter((s) => s.url);
 
   return (
@@ -63,6 +64,12 @@ export default function Footer({ settings }) {
                 <li className="flex items-start gap-2">
                   <Phone size={16} className="mt-0.5 flex-shrink-0 text-[#F0DDE5]" />
                   <a href={`tel:${settings.contact_phone}`} className="hover:text-white transition-colors">{settings.contact_phone}</a>
+                </li>
+              )}
+              {settings?.whatsapp_url && (
+                <li className="flex items-start gap-2">
+                  <MessageCircle size={16} className="mt-0.5 flex-shrink-0 text-[#F0DDE5]" />
+                  <a href={settings.whatsapp_url} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp</a>
                 </li>
               )}
               {settings?.contact_address && (

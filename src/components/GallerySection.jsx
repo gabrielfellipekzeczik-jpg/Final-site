@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Play, X } from 'lucide-react';
 import Butterfly from './Butterfly';
 
@@ -6,11 +6,30 @@ export default function GallerySection({ items = [] }) {
   const [lightbox, setLightbox] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
 
-  const filtered = activeTab === 'videos'
-    ? items.filter((i) => i.is_video)
-    : activeTab === 'photos'
-    ? items.filter((i) => !i.is_video)
-    : items;
+  // Limitar a 6 primeiras mídias na tela principal
+  const displayItems = items.slice(0, 6);
+
+  const filtered = useMemo(() => {
+    if (activeTab === 'videos') {
+      return displayItems.filter((i) => i.is_video);
+    } else if (activeTab === 'photos') {
+      return displayItems.filter((i) => !i.is_video);
+    }
+    return displayItems;
+  }, [displayItems, activeTab]);
+
+  // Extrair categorias únicas
+  const categories = useMemo(() => {
+    return [...new Set(displayItems.map((i) => i.category).filter(Boolean))];
+  }, [displayItems]);
+
+  const filterByCategory = (category) => {
+    return displayItems.filter((i) => i.category === category);
+  };
+
+  if (displayItems.length === 0) {
+    return null;
+  }
 
   return (
     <section id="galeria" className="relative py-24 px-4 sm:px-6 overflow-hidden">
@@ -27,7 +46,8 @@ export default function GallerySection({ items = [] }) {
           </p>
         </div>
 
-        <div className="flex justify-center gap-2 mb-10">
+        {/* Abas de filtro */}
+        <div className="flex justify-center gap-2 mb-10 flex-wrap">
           {[
             { key: 'all', label: 'Tudo' },
             { key: 'photos', label: 'Fotos' },
@@ -47,6 +67,20 @@ export default function GallerySection({ items = [] }) {
           ))}
         </div>
 
+        {/* Filtro por categoria */}
+        {categories.length > 0 && (
+          <div className="flex justify-center gap-2 mb-8 flex-wrap">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className="px-4 py-1.5 rounded-full text-xs font-medium bg-[#A3196E]/10 text-brand-purple hover:bg-[#A3196E]/20 transition-all"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+
         {filtered.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">Nenhum item nesta categoria.</div>
         ) : (
@@ -59,14 +93,28 @@ export default function GallerySection({ items = [] }) {
                   idx === 0 ? 'col-span-2 row-span-2 md:col-span-2' : ''
                 }`}
               >
-                <img
-                  src={item.image_url}
-                  alt={item.title}
-                  className={`w-full object-cover transition-transform duration-700 group-hover:scale-110 ${
-                    idx === 0 ? 'h-64 sm:h-80 md:h-full min-h-[260px]' : 'h-40 sm:h-52'
-                  }`}
-                />
+                {/* Imagem ou vídeo com fit/crop automático */}
+                {item.is_video ? (
+                  <video
+                    src={item.image_url}
+                    className={`w-full object-cover transition-transform duration-700 group-hover:scale-110 ${
+                      idx === 0 ? 'h-64 sm:h-80 md:h-full min-h-[260px]' : 'h-40 sm:h-52'
+                    }`}
+                  />
+                ) : (
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    className={`w-full object-cover transition-transform duration-700 group-hover:scale-110 ${
+                      idx === 0 ? 'h-64 sm:h-80 md:h-full min-h-[260px]' : 'h-40 sm:h-52'
+                    }`}
+                  />
+                )}
+
+                {/* Overlay gradiente */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#4A152B]/80 via-transparent to-transparent opacity-80" />
+
+                {/* Ícone de play para vídeos */}
                 {item.is_video && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -74,6 +122,8 @@ export default function GallerySection({ items = [] }) {
                     </div>
                   </div>
                 )}
+
+                {/* Informações do item */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   {item.category && (
                     <span className="inline-block text-xs font-semibold text-white/90 bg-[#A3196E]/80 rounded-full px-3 py-1 mb-2">
@@ -88,6 +138,7 @@ export default function GallerySection({ items = [] }) {
         )}
       </div>
 
+      {/* Lightbox modal */}
       {lightbox && (
         <div
           className="fixed inset-0 z-[100] bg-[#4A152B]/90 backdrop-blur-md flex items-center justify-center p-4"
@@ -97,7 +148,19 @@ export default function GallerySection({ items = [] }) {
             <X size={32} />
           </button>
           <div className="max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-            <img src={lightbox.image_url} alt={lightbox.title} className="w-full rounded-2xl shadow-2xl" />
+            {lightbox.is_video ? (
+              <video
+                src={lightbox.image_url}
+                controls
+                className="w-full rounded-2xl shadow-2xl max-h-[70vh] object-contain"
+              />
+            ) : (
+              <img
+                src={lightbox.image_url}
+                alt={lightbox.title}
+                className="w-full rounded-2xl shadow-2xl max-h-[70vh] object-contain"
+              />
+            )}
             <div className="text-center mt-4">
               <p className="text-white/90 font-semibold text-lg">{lightbox.title}</p>
               {lightbox.category && <p className="text-white/60 text-sm">{lightbox.category}</p>}

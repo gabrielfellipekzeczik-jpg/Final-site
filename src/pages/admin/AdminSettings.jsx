@@ -18,6 +18,7 @@ const sections = [
       { name: 'facebook_url', label: 'Facebook', type: 'text', placeholder: 'https://facebook.com/...' },
       { name: 'youtube_url', label: 'YouTube', type: 'text', placeholder: 'https://youtube.com/...' },
       { name: 'tiktok_url', label: 'TikTok', type: 'text', placeholder: 'https://tiktok.com/...' },
+      { name: 'whatsapp_url', label: 'WhatsApp', type: 'text', placeholder: 'https://wa.me/5541999999999' },
     ],
   },
   {

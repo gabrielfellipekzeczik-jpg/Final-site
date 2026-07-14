@@ -48,13 +48,6 @@ export default function ImageUpload({ value, onChange, label }) {
         {uploading ? 'Enviando...' : 'Enviar imagem'}
         <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={uploading} />
       </label>
-      <input
-        type="text"
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="ou cole uma URL de imagem"
-        className="mt-2 w-full border border-[#A3196E]/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-magenta"
-      />
     </div>
   );
 }

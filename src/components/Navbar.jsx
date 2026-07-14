@@ -20,6 +20,10 @@ export default function Navbar({ settings }) {
     { label: 'Doação', href: '#doacao' },
   ];
 
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/5541999999999', '_blank');
+  };
+
   const handleNav = (href) => {
     setMenuOpen(false);
     const el = document.querySelector(href);
@@ -56,12 +60,6 @@ export default function Navbar({ settings }) {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => handleNav('#ingressos')}
-            className="bg-brand-gradient text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:shadow-lg hover:shadow-[#A3196E]/30 transition-all duration-300 hover:scale-105"
-          >
-            Ingressos
-          </button>
           <a
             href="/admin/login"
             className={`flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-brand-magenta ${scrolled ? 'text-brand-purple/60' : 'text-white/70'}`}
@@ -89,12 +87,6 @@ export default function Navbar({ settings }) {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => handleNav('#ingressos')}
-            className="bg-brand-gradient text-white text-sm font-semibold px-6 py-3 rounded-full mt-2"
-          >
-            Ingressos
-          </button>
           <a
             href="/admin/login"
             className="flex items-center gap-1.5 text-brand-purple/60 font-medium py-1"

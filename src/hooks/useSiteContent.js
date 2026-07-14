@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS = {
   facebook_url: '',
   youtube_url: '',
   tiktok_url: '',
+  whatsapp_url: '',
   contact_email: 'contato@transformadas.org',
   contact_phone: '(41) 99999-9999',
   contact_address: 'São José dos Pinhais, PR — Brasil',
@@ -34,6 +35,7 @@ const DEFAULT_SETTINGS = {
   pix_100: '',
   pix_200: '',
   pix_free: '',
+  whatsapp_url: '',
 };
 
 const DEFAULT_SLIDES = [];
