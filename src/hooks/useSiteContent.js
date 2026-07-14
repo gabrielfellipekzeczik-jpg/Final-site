@@ -70,7 +70,19 @@ export function useSiteContent() {
           supabase.from('gallery_items').select('*').order('order', { ascending: true }).limit(50),
         ]);
 
-        if (settingsRes.data?.length > 0) setSettings({ ...DEFAULT_SETTINGS, ...settingsRes.data[0] });
+        if (settingsRes.data?.length > 0) {
+          const loadedSettings = { ...DEFAULT_SETTINGS, ...settingsRes.data[0] };
+          setSettings(loadedSettings);
+          if (loadedSettings.logo_url) {
+            let favicon = document.querySelector("link[rel~='icon']");
+            if (!favicon) {
+              favicon = document.createElement('link');
+              favicon.rel = 'icon';
+              document.head.appendChild(favicon);
+            }
+            favicon.href = loadedSettings.logo_url;
+          }
+        }
         if (slidesRes.data?.length > 0) setSlides(slidesRes.data.filter((s) => s.active !== false));
         if (coursesRes.data?.length > 0) setCourses(coursesRes.data);
         if (galleryRes.data?.length > 0) setGallery(galleryRes.data);
