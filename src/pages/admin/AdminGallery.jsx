@@ -86,7 +86,9 @@ export default function AdminGallery() {
       // Se houver mídia, usar a primeira como image_url e is_video
       const media = form.media || [];
       const saveData = {
-        ...form,
+        title: form.title,
+        category: form.category,
+        order: form.order,
         image_url: media.length > 0 ? media[0].url : form.image_url,
         is_video: media.length > 0 ? media[0].isVideo : form.is_video,
       };
