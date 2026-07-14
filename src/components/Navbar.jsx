@@ -1,3 +1,10 @@
+Perfeito! No seu `Navbar.jsx`, o botão de **"Ingressos"** estava destacado tanto no menu para computadores (desktop) quanto no menu lateral para celulares (mobile).
+
+Removi os dois botões de ingressos de forma limpa, mantendo o alinhamento visual e os demais links funcionando perfeitamente.
+
+Aqui está o código atualizado do seu **`Navbar.jsx`**:
+
+```jsx
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Lock } from 'lucide-react';
 
@@ -56,12 +63,6 @@ export default function Navbar({ settings }) {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => handleNav('#ingressos')}
-            className="bg-brand-gradient text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:shadow-lg hover:shadow-[#A3196E]/30 transition-all duration-300 hover:scale-105"
-          >
-            Ingressos
-          </button>
           <a
             href="/admin/login"
             className={`flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-brand-magenta ${scrolled ? 'text-brand-purple/60' : 'text-white/70'}`}
@@ -89,12 +90,6 @@ export default function Navbar({ settings }) {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => handleNav('#ingressos')}
-            className="bg-brand-gradient text-white text-sm font-semibold px-6 py-3 rounded-full mt-2"
-          >
-            Ingressos
-          </button>
           <a
             href="/admin/login"
             className="flex items-center gap-1.5 text-brand-purple/60 font-medium py-1"
@@ -106,3 +101,5 @@ export default function Navbar({ settings }) {
     </nav>
   );
 }
+
+```

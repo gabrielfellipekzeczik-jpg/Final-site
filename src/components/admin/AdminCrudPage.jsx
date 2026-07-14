@@ -5,6 +5,7 @@ import ImageUpload from './ImageUpload';
 
 function Field({ field, value, onChange }) {
   const cls = 'w-full border border-[#A3196E]/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-magenta';
+  
   switch (field.type) {
     case 'textarea':
       return <textarea value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} rows={3} className={cls} />;
@@ -18,20 +19,32 @@ function Field({ field, value, onChange }) {
         </label>
       );
     case 'image':
-      return <ImageUpload value={value} onChange={onChange} />;
+      // Sempre assume multiple para a galeria, ou respeita a propriedade caso ela exista no field
+      const isMultiple = field.multiple !== undefined ? field.multiple : true;
+      return <ImageUpload value={value} onChange={onChange} multiple={isMultiple} />;
     case 'select':
+      // Transforma o Select em um Combobox (datalist)
+      // Isso permite selecionar categorias existentes ou digitar livremente uma nova
+      const listId = `list-${field.name}`;
       return (
-        <select value={value || ''} onChange={(e) => onChange(e.target.value)} className={cls}>
-          <option value="">Selecione...</option>
-          {field.options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-        </select>
+        <div>
+          <input 
+            list={listId} 
+            value={value || ''} 
+            onChange={(e) => onChange(e.target.value)} 
+            placeholder="Selecione ou digite uma nova categoria..." 
+            className={cls} 
+          />
+          <datalist id={listId}>
+            {field.options && field.options.map((opt) => <option key={opt} value={opt} />)}
+          </datalist>
+        </div>
       );
     default:
       return <input type="text" value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} className={cls} />;
   }
 }
 
-// tableName: nome da tabela no Supabase (ex: "carousel_slides")
 export default function AdminCrudPage({ tableName, title, description, fields, itemLabel = 'item' }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,12 +74,40 @@ export default function AdminCrudPage({ tableName, title, description, fields, i
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (editing === 'new') {
-        const { error } = await supabase.from(tableName).insert(form);
+      const imageField = fields.find((f) => f.type === 'image');
+      const mediaValue = imageField ? form[imageField.name] : null;
+
+      // Salvamento em Lote Inteligente: se estamos adicionando itens novos e recebemos uma lista de imagens
+      if (editing === 'new' && Array.isArray(mediaValue) && mediaValue.length > 0) {
+        // Gera um registro para cada imagem selecionada, mantendo o mesmo título, categoria e dados preenchidos
+        const rowsToInsert = mediaValue.map((url, idx) => {
+          const newRow = { ...form };
+          newRow[imageField.name] = url;
+          // Ajusta a ordem para que fiquem sequenciais
+          if (typeof newRow.order === 'number') {
+            newRow.order = newRow.order + idx;
+          }
+          return newRow;
+        });
+
+        const { error } = await supabase.from(tableName).insert(rowsToInsert);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from(tableName).update(form).eq('id', editing);
-        if (error) throw error;
+        // Fluxo padrão para atualizações ou campos de mídia única
+        const formToSave = { ...form };
+        
+        // Se for edição e o valor for um array, salva apenas o primeiro item para não corromper o banco
+        if (Array.isArray(mediaValue)) {
+          formToSave[imageField.name] = mediaValue[0] || '';
+        }
+
+        if (editing === 'new') {
+          const { error } = await supabase.from(tableName).insert(formToSave);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from(tableName).update(formToSave).eq('id', editing);
+          if (error) throw error;
+        }
       }
       cancel();
       await load();
@@ -136,27 +177,41 @@ export default function AdminCrudPage({ tableName, title, description, fields, i
         <div className="text-center py-12 text-muted-foreground">Nenhum item cadastrado. Clique em "Adicionar".</div>
       ) : (
         <div className="space-y-3">
-          {items.map((item) => (
-            <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4 border border-[#A3196E]/05">
-              {imageField && item[imageField.name] ? (
-                <img src={item[imageField.name]} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
-              ) : (
-                <div className="w-14 h-14 rounded-lg bg-[#FFF5F8] flex items-center justify-center flex-shrink-0 text-brand-magenta font-bold">
-                  {(item[titleField.name] || '?').charAt(0).toUpperCase()}
+          {items.map((item) => {
+            const mediaValue = imageField ? item[imageField.name] : null;
+            const firstMedia = Array.isArray(mediaValue) ? mediaValue[0] : mediaValue;
+            const isVideo = typeof firstMedia === 'string' && firstMedia.match(/\.(mp4|webm|ogg|mov)$/i);
+
+            return (
+              <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4 border border-[#A3196E]/05">
+                {firstMedia ? (
+                  isVideo ? (
+                    <video src={firstMedia} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" muted />
+                  ) : (
+                    <img src={firstMedia} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                  )
+                ) : (
+                  <div className="w-14 h-14 rounded-lg bg-[#FFF5F8] flex items-center justify-center flex-shrink-0 text-brand-magenta font-bold">
+                    {(item[titleField.name] || '?').charAt(0).toUpperCase()}
+                  </div>
+                )}
+                
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-brand-purple truncate">{item[titleField.name] || 'Sem título'}</p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {fields.filter((f) => f !== titleField && f !== imageField && f.type !== 'boolean').slice(0, 2).map((f) => {
+                      const val = item[f.name];
+                      return Array.isArray(val) ? `${val.length} mídias` : val;
+                    }).filter(Boolean).join(' • ')}
+                  </p>
                 </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-brand-purple truncate">{item[titleField.name] || 'Sem título'}</p>
-                <p className="text-sm text-muted-foreground truncate">
-                  {fields.filter((f) => f !== titleField && f !== imageField && f.type !== 'boolean').slice(0, 2).map((f) => item[f.name]).filter(Boolean).join(' • ')}
-                </p>
+                <div className="flex gap-1">
+                  <button onClick={() => startEdit(item)} className="p-2 rounded-lg hover:bg-[#FFF5F8] text-brand-purple"><Pencil size={16} /></button>
+                  <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500"><Trash2 size={16} /></button>
+                </div>
               </div>
-              <div className="flex gap-1">
-                <button onClick={() => startEdit(item)} className="p-2 rounded-lg hover:bg-[#FFF5F8] text-brand-purple"><Pencil size={16} /></button>
-                <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500"><Trash2 size={16} /></button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

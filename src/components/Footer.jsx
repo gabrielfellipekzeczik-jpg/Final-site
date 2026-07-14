@@ -1,9 +1,20 @@
 import React from 'react';
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Heart, Lock } from 'lucide-react';
+import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Heart, Lock, MessageCircle } from 'lucide-react';
 import Butterfly from './Butterfly';
 
 export default function Footer({ settings }) {
+  // Lógica para gerar o link do WhatsApp
+  const getWhatsAppUrl = () => {
+    if (settings?.whatsapp_url) return settings.whatsapp_url;
+    if (settings?.contact_phone) {
+      const cleanPhone = settings.contact_phone.replace(/\D/g, ''); // Remove parênteses, traços e espaços
+      return `https://wa.me/55${cleanPhone}`;
+    }
+    return null;
+  };
+
   const socials = [
+    { url: getWhatsAppUrl(), Icon: MessageCircle },
     { url: settings?.instagram_url, Icon: Instagram },
     { url: settings?.facebook_url, Icon: Facebook },
     { url: settings?.youtube_url, Icon: Youtube },
@@ -14,7 +25,8 @@ export default function Footer({ settings }) {
       <Butterfly className="absolute top-10 right-[6%] w-32 h-32 butterfly-float" opacity={0.08} />
       <Butterfly className="absolute bottom-10 left-[4%] w-20 h-20 butterfly-float" opacity={0.06} />
 
-      <div id="ingressos" className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-8">
+      {/* Removemos o ID 'ingressos' antigo daqui para evitar conflitos de âncoras na navegação */}
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-8">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           <div className="md:col-span-2">
             <div className="mb-5">
