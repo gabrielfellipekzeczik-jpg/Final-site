@@ -1,0 +1,45 @@
+import React from 'react';
+
+// Borboleta fiel ao logo do PDF: silhueta sólida em rosa/vinho, asas arredondadas, corpo fino
+export default function Butterfly({ className = '', opacity = 1, color = '#A3196E' }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 120 110"
+      className={className}
+      style={{ opacity }}
+    >
+      <defs>
+        <linearGradient id={`bfg-${color.replace('#','')}`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#7A1E4A" />
+          <stop offset="100%" stopColor={color} />
+        </linearGradient>
+      </defs>
+      {/* Asa superior esquerda */}
+      <path
+        d="M60 55 C55 40, 38 18, 12 22 C2 24, 0 38, 8 46 C2 52, 4 64, 18 60 C32 62, 50 58, 60 55Z"
+        fill={`url(#bfg-${color.replace('#','')})`}
+      />
+      {/* Asa superior direita */}
+      <path
+        d="M60 55 C65 40, 82 18, 108 22 C118 24, 120 38, 112 46 C118 52, 116 64, 102 60 C88 62, 70 58, 60 55Z"
+        fill={`url(#bfg-${color.replace('#','')})`}
+      />
+      {/* Asa inferior esquerda */}
+      <path
+        d="M60 58 C50 68, 34 82, 38 95 C42 104, 56 98, 60 85 C64 98, 78 104, 82 95 C86 82, 70 68, 60 58Z"
+        fill={color}
+        opacity="0.85"
+      />
+      {/* Corpo */}
+      <ellipse cx="60" cy="68" rx="3" ry="22" fill="#3a0f1e" />
+      {/* Cabeça */}
+      <circle cx="60" cy="46" r="4.5" fill="#3a0f1e" />
+      {/* Antenas */}
+      <path d="M57 43 Q50 30, 44 24" stroke="#3a0f1e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M63 43 Q70 30, 76 24" stroke="#3a0f1e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <circle cx="44" cy="24" r="2.5" fill="#3a0f1e" />
+      <circle cx="76" cy="24" r="2.5" fill="#3a0f1e" />
+    </svg>
+  );
+}

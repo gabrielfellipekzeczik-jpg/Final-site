@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 340 30% 98%;
+    --foreground: 322 55% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 322 55% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 322 55% 18%;
+    --primary: 325 65% 18%;
+    --primary-foreground: 340 40% 97%;
+    --secondary: 328 55% 35%;
+    --secondary-foreground: 340 40% 97%;
+    --muted: 340 25% 94%;
+    --muted-foreground: 322 25% 42%;
+    --accent: 326 70% 37%;
+    --accent-foreground: 340 40% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 340 20% 88%;
+    --input: 340 20% 88%;
+    --ring: 326 70% 37%;
+    --chart-1: 325 65% 18%;
+    --chart-2: 326 70% 37%;
+    --chart-3: 340 40% 55%;
+    --chart-4: 340 30% 70%;
+    --chart-5: 322 25% 42%;
+    --radius: 0.75rem;
+    --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 340 30% 98%;
+    --sidebar-foreground: 322 55% 18%;
+    --sidebar-primary: 325 65% 18%;
+    --sidebar-primary-foreground: 340 40% 97%;
+    --sidebar-accent: 340 20% 92%;
+    --sidebar-accent-foreground: 325 65% 18%;
+    --sidebar-border: 340 20% 88%;
+    --sidebar-ring: 326 70% 37%;
+    --brand-purple: #4A152B;
+    --brand-magenta: #A3196E;
+    --brand-pink-light: #FFF5F8;
+    --brand-mauve: #F0DDE5;
+  }
+
+  .dark {
+    --background: 322 40% 8%;
+    --foreground: 340 40% 95%;
+    --card: 322 35% 12%;
+    --card-foreground: 340 40% 95%;
+    --popover: 322 35% 12%;
+    --popover-foreground: 340 40% 95%;
+    --primary: 326 70% 55%;
+    --primary-foreground: 322 40% 8%;
+    --secondary: 322 30% 22%;
+    --secondary-foreground: 340 40% 95%;
+    --muted: 322 25% 18%;
+    --muted-foreground: 340 20% 65%;
+    --accent: 326 60% 45%;
+    --accent-foreground: 340 40% 95%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 322 25% 22%;
+    --input: 322 25% 22%;
+    --ring: 326 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply text-foreground font-body;
+    background: radial-gradient(ellipse at center, #FFF5F8 0%, #F8E4ED 50%, #F0DDE5 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .text-brand-purple {
+    color: #4A152B;
+  }
+  .text-brand-magenta {
+    color: #A3196E;
+  }
+  .bg-brand-purple {
+    background-color: #4A152B;
+  }
+  .bg-brand-magenta {
+    background-color: #A3196E;
+  }
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #4A152B 0%, #7A1E4A 50%, #A3196E 100%);
+  }
+  .bg-brand-gradient-soft {
+    background: linear-gradient(135deg, #FFF5F8 0%, #F8E4ED 50%, #F0DDE5 100%);
+  }
+  .text-brand-gradient {
+    background: linear-gradient(135deg, #4A152B 0%, #A3196E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .font-display {
+    font-family: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  }
+  .font-heading {
+    font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(163, 25, 110, 0.12);
+  }
+  .butterfly-float {
+    animation: butterflyFloat 6s ease-in-out infinite;
+  }
+  @keyframes butterflyFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+  }
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
