@@ -12,8 +12,17 @@ import { useSiteContent } from '@/hooks/useSiteContent';
 
 export default function Home() {
   const { settings, slides, courses, gallery } = useSiteContent();
+  const bgStyle = settings.background_image
+    ? {
+        backgroundImage: `url(${settings.background_image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }
+    : undefined;
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={bgStyle}>
       <Navbar settings={settings} />
       <HeroCarousel slides={slides} />
       <AboutSection settings={settings} />

@@ -7,6 +7,7 @@
 create table if not exists site_settings (
   id uuid primary key default gen_random_uuid(),
   logo_url text,
+  background_image text,
   instagram_url text,
   facebook_url text,
   youtube_url text,

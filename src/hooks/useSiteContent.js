@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 const DEFAULT_SETTINGS = {
   logo_url: '',
+  background_image: '',
   instagram_url: '',
   facebook_url: '',
   youtube_url: '',

@@ -6,7 +6,10 @@ import ImageUpload from '@/components/admin/ImageUpload';
 const sections = [
   {
     title: 'Identidade Visual',
-    fields: [{ name: 'logo_url', label: 'Logo do site', type: 'image' }],
+    fields: [
+      { name: 'logo_url', label: 'Logo do site', type: 'image' },
+      { name: 'background_image', label: 'Imagem de fundo do site (opcional — cobre a tela toda, atrás do conteúdo)', type: 'image' },
+    ],
   },
   {
     title: 'Redes Sociais',
