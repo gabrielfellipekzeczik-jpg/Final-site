@@ -30,6 +30,9 @@ export default function GallerySection({ items = [] }) {
   }
 
   // Verificar se há mais itens para mostrar
+  // Limitar a 6 primeiras mídias na tela principal, ou todas se "Ver mais" foi clicado
+  const displayItems = showMore ? filteredByType : filteredByType.slice(0, 6);
+
   const hasMoreItems = filteredByType.length > 6;
 
   return (
