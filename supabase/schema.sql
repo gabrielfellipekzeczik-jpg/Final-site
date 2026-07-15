@@ -92,6 +92,17 @@ create table if not exists gallery_items (
   created_at timestamptz default now()
 );
 
+-- 5. Depoimentos
+create table if not exists testimonials (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  role text,
+  photo_url text,
+  quote text not null,
+  "order" integer default 0,
+  created_at timestamptz default now()
+);
+
 -- ============================================================================
 -- Row Level Security (RLS)
 -- Leitura pública (o site é institucional, todo mundo pode ver o conteúdo).
@@ -106,16 +117,19 @@ alter table site_settings enable row level security;
 alter table carousel_slides enable row level security;
 alter table courses enable row level security;
 alter table gallery_items enable row level security;
+alter table testimonials enable row level security;
 
 create policy "Leitura pública" on site_settings for select using (true);
 create policy "Leitura pública" on carousel_slides for select using (true);
 create policy "Leitura pública" on courses for select using (true);
 create policy "Leitura pública" on gallery_items for select using (true);
+create policy "Leitura pública" on testimonials for select using (true);
 
 create policy "Escrita liberada (admin via painel proprio)" on site_settings for all using (true) with check (true);
 create policy "Escrita liberada (admin via painel proprio)" on carousel_slides for all using (true) with check (true);
 create policy "Escrita liberada (admin via painel proprio)" on courses for all using (true) with check (true);
 create policy "Escrita liberada (admin via painel proprio)" on gallery_items for all using (true) with check (true);
+create policy "Escrita liberada (admin via painel proprio)" on testimonials for all using (true) with check (true);
 
 -- ============================================================================
 -- Storage: bucket público para as imagens do site (logo, fotos, carrossel...)
@@ -157,3 +171,20 @@ select
   'Benedita é o testemunho vivo de que a transformação é possível. Sua história de superação inspira centenas de mulheres a buscarem sua própria renovação e dignidade.',
   'Associação de mulheres que crescem, estudam, trabalham e nunca perdem a identidade. Da sala de casa ao Paraná — uma jornada de fé e transformação.'
 where not exists (select 1 from site_settings);
+
+-- ============================================================================
+-- Se você já rodou este schema antes (site já existente) e só precisa
+-- adicionar a tabela de Depoimentos, rode apenas o bloco abaixo:
+-- ============================================================================
+-- create table if not exists testimonials (
+--   id uuid primary key default gen_random_uuid(),
+--   name text not null,
+--   role text,
+--   photo_url text,
+--   quote text not null,
+--   "order" integer default 0,
+--   created_at timestamptz default now()
+-- );
+-- alter table testimonials enable row level security;
+-- create policy "Leitura pública" on testimonials for select using (true);
+-- create policy "Escrita liberada (admin via painel proprio)" on testimonials for all using (true) with check (true);

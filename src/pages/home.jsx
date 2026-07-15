@@ -7,11 +7,12 @@ import MissionSection from '@/components/MissionSection';
 import CoursesSection from '@/components/CoursesSection';
 import GallerySection from '@/components/GallerySection';
 import DonationSection from '@/components/DonationSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
 import Footer from '@/components/Footer';
 import { useSiteContent } from '@/hooks/useSiteContent';
 
 export default function Home() {
-  const { settings, slides, courses, gallery } = useSiteContent();
+  const { settings, slides, courses, gallery, testimonials } = useSiteContent();
   const bgStyle = settings.background_image
     ? {
         backgroundImage: `url(${settings.background_image})`,
@@ -31,6 +32,7 @@ export default function Home() {
       <CoursesSection courses={courses} />
       <GallerySection items={gallery} />
       <DonationSection settings={settings} />
+      <TestimonialsSection items={testimonials} />
       <Footer settings={settings} />
     </div>
   );

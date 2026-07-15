@@ -39,9 +39,18 @@ export default function HeroCarousel({ slides = [] }) {
             onKeyDown={clickable ? (e) => { if (e.key === 'Enter') handleClick(slide.cta_link); } : undefined}
             className={`absolute inset-0 transition-opacity duration-1000 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'} ${clickable ? 'cursor-pointer' : ''}`}
           >
+            {/* Fundo desfocado só para preencher as bordas, sem cortar a imagem principal */}
             <div
-              className="absolute inset-0 bg-cover bg-center"
+              className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-70"
               style={{ backgroundImage: `url(${slide.image_url})` }}
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-brand-purple/10" aria-hidden="true" />
+            {/* Imagem completa, sempre visível, sem corte */}
+            <img
+              src={slide.image_url}
+              alt={slide.main_title || slide.eyebrow || ''}
+              className="relative z-10 w-full h-full object-contain"
             />
           </div>
         );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { LayoutDashboard, Settings, GalleryHorizontalEnd, GraduationCap, Images, LogOut, ExternalLink, CheckCircle, X } from 'lucide-react';
+import { LayoutDashboard, Settings, GalleryHorizontalEnd, GraduationCap, Images, MessageSquareQuote, LogOut, ExternalLink, CheckCircle, X } from 'lucide-react';
 
 const navItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Carrossel', path: '/admin/carousel', icon: GalleryHorizontalEnd },
   { label: 'Cursos', path: '/admin/courses', icon: GraduationCap },
   { label: 'Galeria', path: '/admin/gallery', icon: Images },
+  { label: 'Depoimentos', path: '/admin/testimonials', icon: MessageSquareQuote },
 ];
 
 export default function AdminLayout() {
