@@ -7,7 +7,7 @@ export default function GallerySection({ items = [] }) {
   const [activeTab, setActiveTab] = useState('all');
   const [showMore, setShowMore] = useState(false);
 
-  // 1. Filtrar por tipo (Tudo/Fotos/Vídeos)
+  // Primeiro, filtrar por tipo (Tudo/Fotos/Vídeos)
   const filteredByType = useMemo(() => {
     if (activeTab === 'videos') {
       return items.filter((i) => i.is_video);
@@ -17,13 +17,10 @@ export default function GallerySection({ items = [] }) {
     return items;
   }, [items, activeTab]);
 
-  // 2. Verificar se há mais itens para mostrar
-  const hasMoreItems = filteredByType.length > 6;
-
-  // 3. Aplicar limite de exibição (declarado apenas uma vez)
+  // Depois, aplicar o limite de 6 itens (ou todos se "Ver mais" foi clicado)
   const displayItems = showMore ? filteredByType : filteredByType.slice(0, 6);
 
-  // 4. Extrair categorias únicas
+  // Extrair categorias únicas dos itens filtrados
   const categories = useMemo(() => {
     return [...new Set(displayItems.map((i) => i.category).filter(Boolean))];
   }, [displayItems]);
@@ -31,6 +28,8 @@ export default function GallerySection({ items = [] }) {
   if (filteredByType.length === 0) {
     return null;
   }
+
+  const hasMoreItems = filteredByType.length > 6;
 
   return (
     <section id="galeria" className="relative py-24 px-4 sm:px-6 overflow-hidden">
@@ -58,7 +57,7 @@ export default function GallerySection({ items = [] }) {
               key={tab.key}
               onClick={() => {
                 setActiveTab(tab.key);
-                setShowMore(false);
+                setShowMore(false); // Resetar "Ver mais" ao trocar de aba
               }}
               className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
                 activeTab === tab.key
@@ -97,8 +96,11 @@ export default function GallerySection({ items = [] }) {
                   className={`group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-[#A3196E]/15 transition-all duration-500 ${
                     idx === 0 ? 'col-span-2 row-span-2 md:col-span-2' : ''
                   }`}
-                  style={{ aspectRatio: idx === 0 ? '2 / 2' : '1 / 1' }}
+                  style={{
+                    aspectRatio: idx === 0 ? '2 / 2' : '1 / 1',
+                  }}
                 >
+                  {/* Container com posicionamento absoluto para garantir preenchimento */}
                   <div className="absolute inset-0 w-full h-full">
                     {item.is_video ? (
                       <video
@@ -114,8 +116,10 @@ export default function GallerySection({ items = [] }) {
                     )}
                   </div>
 
+                  {/* Overlay gradiente */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#4A152B]/80 via-transparent to-transparent opacity-80" />
 
+                  {/* Ícone de play para vídeos */}
                   {item.is_video && (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -124,6 +128,7 @@ export default function GallerySection({ items = [] }) {
                     </div>
                   )}
 
+                  {/* Informações do item */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
                     {item.category && (
                       <span className="inline-block text-xs font-semibold text-white/90 bg-[#A3196E]/80 rounded-full px-3 py-1 mb-2">
@@ -136,6 +141,7 @@ export default function GallerySection({ items = [] }) {
               ))}
             </div>
 
+            {/* Botão "Ver mais" */}
             {hasMoreItems && !showMore && (
               <div className="flex justify-center mt-10">
                 <button
@@ -148,6 +154,7 @@ export default function GallerySection({ items = [] }) {
               </div>
             )}
 
+            {/* Botão "Ver menos" */}
             {showMore && (
               <div className="flex justify-center mt-10">
                 <button
@@ -163,6 +170,7 @@ export default function GallerySection({ items = [] }) {
         )}
       </div>
 
+      {/* Lightbox modal */}
       {lightbox && (
         <div
           className="fixed inset-0 z-[100] bg-[#4A152B]/90 backdrop-blur-md flex items-center justify-center p-4"
