@@ -55,6 +55,7 @@ const DEFAULT_COURSES = [
   { name: 'Saúde Mental', icon: 'Heart', description: 'Atendimento com psicólogas e psicanalistas' },
 ];
 const DEFAULT_GALLERY = [];
+const DEFAULT_PILLARS = [];
 
 export function useSiteContent() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
@@ -62,17 +63,19 @@ export function useSiteContent() {
   const [courses, setCourses] = useState(DEFAULT_COURSES);
   const [gallery, setGallery] = useState(DEFAULT_GALLERY);
   const [testimonials, setTestimonials] = useState(DEFAULT_TESTIMONIALS);
+  const [pillars, setPillars] = useState(DEFAULT_PILLARS);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const [settingsRes, slidesRes, coursesRes, galleryRes, testimonialsRes] = await Promise.all([
+        const [settingsRes, slidesRes, coursesRes, galleryRes, testimonialsRes, pillarsRes] = await Promise.all([
           supabase.from('site_settings').select('*').limit(1),
           supabase.from('carousel_slides').select('*').order('order', { ascending: true }).limit(50),
           supabase.from('courses').select('*').order('order', { ascending: true }).limit(50),
           supabase.from('gallery_items').select('*').order('order', { ascending: true }).limit(50),
           supabase.from('testimonials').select('*').order('order', { ascending: true }).limit(50),
+          supabase.from('biblical_pillars').select('*').order('order', { ascending: true }).limit(20),
         ]);
 
         if (settingsRes.data?.length > 0) {
@@ -92,6 +95,7 @@ export function useSiteContent() {
         if (coursesRes.data?.length > 0) setCourses(coursesRes.data);
         if (galleryRes.data?.length > 0) setGallery(galleryRes.data);
         if (testimonialsRes.data?.length > 0) setTestimonials(testimonialsRes.data);
+        if (pillarsRes.data?.length > 0) setPillars(pillarsRes.data);
       } catch (e) {
         // mantém os defaults em caso de erro
         console.error('Falha ao carregar conteúdo do site:', e);
@@ -101,5 +105,5 @@ export function useSiteContent() {
     })();
   }, []);
 
-  return { settings, slides, courses, gallery, testimonials, loaded };
+  return { settings, slides, courses, gallery, testimonials, pillars, loaded };
 }

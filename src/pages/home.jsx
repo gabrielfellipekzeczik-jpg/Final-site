@@ -4,6 +4,7 @@ import HeroCarousel from '@/components/HeroCarousel';
 import AboutSection from '@/components/AboutSection';
 import FounderSection from '@/components/FounderSection';
 import MissionSection from '@/components/MissionSection';
+import PilaresBiblicosSection from '@/components/PilaresBiblicosSection';
 import CoursesSection from '@/components/CoursesSection';
 import GallerySection from '@/components/GallerySection';
 import DonationSection from '@/components/DonationSection';
@@ -12,7 +13,7 @@ import Footer from '@/components/Footer';
 import { useSiteContent } from '@/hooks/useSiteContent';
 
 export default function Home() {
-  const { settings, slides, courses, gallery, testimonials } = useSiteContent();
+  const { settings, slides, courses, gallery, testimonials, pillars } = useSiteContent();
   const bgStyle = settings.background_image
     ? {
         backgroundImage: `url(${settings.background_image})`,
@@ -29,6 +30,7 @@ export default function Home() {
       <AboutSection settings={settings} />
       <FounderSection settings={settings} />
       <MissionSection settings={settings} />
+      <PilaresBiblicosSection pillars={pillars} settings={settings} />
       <CoursesSection courses={courses} />
       <GallerySection items={gallery} />
       <DonationSection settings={settings} />

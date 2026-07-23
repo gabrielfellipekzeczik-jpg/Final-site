@@ -20,6 +20,7 @@ import AdminCarousel from './pages/admin/AdminCarousel';
 import AdminCourses from './pages/admin/AdminCourses';
 import AdminGallery from './pages/admin/AdminGallery';
 import AdminTestimonials from './pages/admin/AdminTestimonials';
+import AdminPilares from './pages/admin/AdminPilares';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                 <Route path="/admin/courses" element={<AdminCourses />} />
                 <Route path="/admin/gallery" element={<AdminGallery />} />
                 <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+                <Route path="/admin/pilares" element={<AdminPilares />} />
               </Route>
             </Route>
             <Route path="*" element={<PageNotFound />} />
